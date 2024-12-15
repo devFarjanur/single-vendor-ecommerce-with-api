@@ -53,9 +53,6 @@ class AuthenticatedSessionController extends Controller
         if ($request->routeIs('admin.login') && $user->role !== 'admin') {
             return false;
         }
-        if ($request->routeIs('vendor.login') && $user->role !== 'vendor') {
-            return false;
-        }
         if ($request->routeIs('customer.login') && $user->role !== 'customer') {
             return false;
         }
@@ -81,12 +78,10 @@ class AuthenticatedSessionController extends Controller
         switch ($user->role) {
             case 'admin':
                 return redirect()->route('admin.login');
-            case 'vendor':
-                return redirect()->route('vendor.login');
             case 'customer':
                 return redirect()->route('customer.login');
             default:
-                return redirect('/');
+                return redirect()->route('customer.login');
         }
     }
 }

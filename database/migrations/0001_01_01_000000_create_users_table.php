@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,13 +12,33 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('name', 255);
+            $table->string('email', 255)->unique();
+            $table->string('password', 255);
+            $table->enum('role', ['admin', 'customer'])->default('customer');
+            $table->string('phone', 50)->nullable();
+            $table->string('profile_image', 255)->nullable();
+            $table->enum('status', [0, 1, 3])->default(1); // Status: 0 = inactive, 1 = active, 3 = suspended
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->rememberToken()->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->enum('gender', ['male', 'female', 'other'])->nullable();
+            $table->timestamp('last_login_at')->nullable();
+            $table->string('last_login_ip', 45)->nullable();
+            $table->string('referral_code', 50)->nullable()->unique();
+            $table->json('preferences')->nullable();
+            $table->integer('reward_points')->default(0);
+            $table->text('suspension_reason')->nullable(); // Reason for suspension (if status is 3)
+            $table->string('country', 100)->nullable();
+            $table->string('state', 100)->nullable();
+            $table->string('alternate_email', 255)->nullable();
+            $table->string('alternate_phone', 50)->nullable();
+            $table->string('tax_id', 100)->nullable();
+            $table->boolean('newsletter_subscription')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
